@@ -19,5 +19,7 @@ crash.log
 
 *.conf
 
+# Ignore Wireguard specific key files
 privatekey
 publickey
+presharedkey

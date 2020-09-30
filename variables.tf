@@ -1,7 +1,7 @@
 variable "region" {
   type        = string
   description = "The region where the VPC resources will be deployed."
-  default     = "us-east"
+  default     = ""
 }
 
 variable "ssh_key" {
@@ -11,8 +11,9 @@ variable "ssh_key" {
 }
 
 variable "default_instance_profile" {
-  type    = string
-  default = "bx2-2x8"
+  type        = string
+  description = "Instance size for compute nodes."
+  default     = "bx2-2x8"
 }
 
 variable "os_image" {
@@ -39,17 +40,6 @@ variable "client_public_key" {
   description = "Wireguard client public key"
 }
 
-variable "consul_token" {
-  type    = string
-  default = ""
-}
-
-
-variable "consul_http" {
-  type    = string
-  default = ""
-}
-
 variable "vpc_name" {
   type        = string
   description = "Name of vpc and related resources"
@@ -59,5 +49,11 @@ variable "vpc_name" {
 variable "client_private_key" {
   type        = string
   description = "Private WG key used to populate local wg file."
+  default     = ""
+}
+
+variable "client_preshared_key" {
+  type        = string
+  description = "Client WG Preshared Key."
   default     = ""
 }

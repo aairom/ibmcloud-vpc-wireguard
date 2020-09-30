@@ -12,15 +12,18 @@ systemctl enable --now atd
 echo "net.ipv4.ip_forward=1" | tee -a /etc/sysctl.conf
 sysctl -p
 
-## Generate Wireguard Public and Private Keys
+## Generate Wireguard Public and Private Keys and Preshared Key
 /usr/bin/wg genkey | tee /etc/wireguard/privatekey | /usr/bin/wg pubkey | tee /etc/wireguard/publickey
+/usr/bin/wg genpsk | tee /etc/wireguard/presharedkey
 
 ## Download Wireguard configuration file 
 wget https://raw.githubusercontent.com/greyhoundforty/wireguard-us-east/master/wg0.conf-example -O /etc/wireguard/wg0.conf
 
-## Update Wireguard configuration with client public key and server private key
+## Update Wireguard configuration with client public key, client preshared key, and server private key
+export PRESHARED_KEY=${client_preshared_key}
 export CLIENT_PUBLIC_KEY=${client_public_key}
 sed -i "s|CLIENT_PUBLIC_KEY_PLACEHOLDER|$CLIENT_PUBLIC_KEY|" /etc/wireguard/wg0.conf
+sed -i "s|PRESHARED_KEY_PLACEHOLDER|$PRESHARED_KEY|" /etc/wireguard/wg0.conf
 
 PRIVATE_KEY=`cat /etc/wireguard/privatekey`
 sed -i "s|PRIVATE_KEY_PLACEHOLDER|$PRIVATE_KEY|" /etc/wireguard/wg0.conf
@@ -33,7 +36,7 @@ wget https://raw.githubusercontent.com/greyhoundforty/wireguard-us-east/master/a
 sed -i "s|CLIENT_PUBLIC_KEY_PLACEHOLDER|$CLIENT_PUBLIC_KEY|" /root/add-wg-peer.sh
 chmod +x /root/add-wg-peer.sh
 
-## Reboot instance to pick up wireguard module
+## Wait one minute and then reboot instance. This is needed to pick up wireguard module in the updated kernel
 /usr/bin/at now + 1 minutes <<END
 reboot
 END

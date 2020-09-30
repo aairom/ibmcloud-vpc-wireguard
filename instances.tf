@@ -14,7 +14,7 @@ resource "ibm_is_instance" "wireguard_instance" {
   vpc       = ibm_is_vpc.vpc.id
   zone      = data.ibm_is_zones.regional_zones.zones[0]
   keys      = [data.ibm_is_ssh_key.ssh_key.id]
-  user_data = templatefile("${path.module}/installer.sh", { client_public_key = var.client_public_key })
+  user_data = templatefile("${path.module}/installer.sh", { client_public_key = var.client_public_key, client_preshared_key = var.client_preshared_key })
 }
 
 resource "ibm_is_instance" "z1_instance" {
@@ -30,10 +30,9 @@ resource "ibm_is_instance" "z1_instance" {
   resource_group = data.ibm_resource_group.rg.id
   tags           = [var.region, local.project]
 
-  vpc       = ibm_is_vpc.vpc.id
-  zone      = data.ibm_is_zones.regional_zones.zones[0]
-  keys      = [data.ibm_is_ssh_key.ssh_key.id]
-  user_data = file("${path.module}/install.yml")
+  vpc  = ibm_is_vpc.vpc.id
+  zone = data.ibm_is_zones.regional_zones.zones[0]
+  keys = [data.ibm_is_ssh_key.ssh_key.id]
 }
 
 resource "ibm_is_instance" "z2_instance" {
@@ -49,10 +48,9 @@ resource "ibm_is_instance" "z2_instance" {
   resource_group = data.ibm_resource_group.rg.id
   tags           = [var.region, local.project]
 
-  vpc       = ibm_is_vpc.vpc.id
-  zone      = data.ibm_is_zones.regional_zones.zones[1]
-  keys      = [data.ibm_is_ssh_key.ssh_key.id]
-  user_data = file("${path.module}/install.yml")
+  vpc  = ibm_is_vpc.vpc.id
+  zone = data.ibm_is_zones.regional_zones.zones[1]
+  keys = [data.ibm_is_ssh_key.ssh_key.id]
 }
 
 resource "ibm_is_instance" "z3_instance" {
@@ -68,8 +66,7 @@ resource "ibm_is_instance" "z3_instance" {
   resource_group = data.ibm_resource_group.rg.id
   tags           = [var.region, local.project]
 
-  vpc       = ibm_is_vpc.vpc.id
-  zone      = data.ibm_is_zones.regional_zones.zones[2]
-  keys      = [data.ibm_is_ssh_key.ssh_key.id]
-  user_data = file("${path.module}/install.yml")
+  vpc  = ibm_is_vpc.vpc.id
+  zone = data.ibm_is_zones.regional_zones.zones[2]
+  keys = [data.ibm_is_ssh_key.ssh_key.id]
 }
